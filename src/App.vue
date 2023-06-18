@@ -46,7 +46,9 @@ const dataLanguageConfig = computed(() => {
       <NDialogProvider>
         <NNotificationProvider>
           <NMessageProvider>
+            <div style="max-width: 720px; margin: auto;">
             <RouterView />
+            </div>
           </NMessageProvider>
         </NNotificationProvider>
       </NDialogProvider>
