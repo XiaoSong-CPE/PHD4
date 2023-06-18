@@ -15,12 +15,12 @@ const languageConfig = computed(() => {
   return lang === 'zh-CN'
     ? zhCN
     : lang === 'en-GB'
-    ? enGB
-    : lang === 'zh'
-    ? zhCN
-    : lang === 'en'
-    ? enGB
-    : null
+      ? enGB
+      : lang === 'zh'
+        ? zhCN
+        : lang === 'en'
+          ? enGB
+          : null
 })
 const dataLanguageConfig = computed(() => {
   const lang =
@@ -30,19 +30,26 @@ const dataLanguageConfig = computed(() => {
   return lang === 'zh-CN'
     ? dateZhCN
     : lang === 'en-GB'
-    ? dateEnGB
-    : lang === 'zh'
-    ? dateZhCN
-    : lang === 'en'
-    ? dateEnGB
-    : null
+      ? dateEnGB
+      : lang === 'zh'
+        ? dateZhCN
+        : lang === 'en'
+          ? dateEnGB
+          : null
 })
 </script>
 
 <template>
   <NConfigProvider :theme="themeConfig" :locale="languageConfig" :date-locale="dataLanguageConfig">
-    <NaiveProvider>
-      <RouterView />
-    </NaiveProvider>
+    <n-global-style />
+    <NLoadingBarProvider>
+      <NDialogProvider>
+        <NNotificationProvider>
+          <NMessageProvider>
+            <RouterView />
+          </NMessageProvider>
+        </NNotificationProvider>
+      </NDialogProvider>
+    </NLoadingBarProvider>
   </NConfigProvider>
 </template>
