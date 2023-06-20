@@ -81,10 +81,9 @@ async function submit() {
   let res = await exam(PrüfungString.value, input.value)
 
   // 弹出结果
-  let ifEnoughLength = res.points === res.finalScore
   dialog.success({
     title: `${res.finalScore}分！`,
-    content: res.comment + (ifEnoughLength ? '' : '（词数不足80词，已扣除相应分数）'),
+    content: `基础评分：${res.orgScore}分\n\n词数要求：${res.finalScore - res.orgScore}分\n\n字迹整洁：(敬请期待)`,
     positiveText: '确定',
     onPositiveClick: () => {
       // 点击确定按钮

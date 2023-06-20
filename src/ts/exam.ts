@@ -1,5 +1,6 @@
 import { Configuration, OpenAIApi } from 'openai'
 import wordsCount from 'words-count'
+import Mustache from 'mustache'
 
 // 定义空prompt
 let prompt = ``
@@ -46,7 +47,14 @@ async function reexamByWordCount(antwort: string, orgScore: number): Promise<num
 }
 
 async function exam(frage: string, antwort: string) {
-  console.groupCollapsed(`exam(${frage}, ${antwort})`)
+  console.groupCollapsed(`exam()`)
+  let res: {
+    orgScore: number
+    finalScore: number
+  } = {
+    orgScore: 0,
+    finalScore: 0
+  }
 
   // 检查prompt是否为空
   if (prompt === ``) {
@@ -70,21 +78,26 @@ async function exam(frage: string, antwort: string) {
     model: 'gpt-3.5-turbo',
     temperature: 0,
     messages: [
-      { role: 'system', content: prompt + '\n\n考试题目：' + frage },
-      { role: 'user', content: antwort }
+      {
+        role: 'user',
+        content: Mustache.render(prompt, {
+          question: frage,
+          answer: antwort
+        })
+      }
     ]
   })
 
   console.log('AI改卷结果：')
   console.log(completion.data.choices[0].message)
-  let res = JSON.parse(completion.data.choices[0].message?.content || '')
+  res.orgScore = Number(completion.data.choices[0].message?.content)
 
   console.log('字数：')
   console.log(wordsCount(antwort))
 
   // 根据字数修正分数
-  if (res) {
-    res.finalScore = await reexamByWordCount(antwort, res.points)
+  if (res.orgScore) {
+    res.finalScore = await reexamByWordCount(antwort, res.orgScore)
   } else {
     new Error('AI改卷失败')
   }
