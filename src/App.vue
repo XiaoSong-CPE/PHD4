@@ -40,18 +40,27 @@ const dataLanguageConfig = computed(() => {
 </script>
 
 <template>
-  <NConfigProvider :theme="themeConfig" :locale="languageConfig" :date-locale="dataLanguageConfig">
-    <n-global-style />
-    <NLoadingBarProvider>
-      <NDialogProvider>
-        <NNotificationProvider>
-          <NMessageProvider>
-            <div style="max-width: 720px; margin: auto;">
-            <RouterView />
-            </div>
-          </NMessageProvider>
-        </NNotificationProvider>
-      </NDialogProvider>
-    </NLoadingBarProvider>
-  </NConfigProvider>
+  <v-layout>
+    <NConfigProvider :theme="themeConfig" :locale="languageConfig" :date-locale="dataLanguageConfig">
+      <n-global-style />
+      <NLoadingBarProvider>
+        <NDialogProvider>
+          <NNotificationProvider>
+            <NMessageProvider>
+              <v-app-bar :elevation="2">
+                <template #prepend>
+                  <v-btn icon="mdi-menu"></v-btn>
+                </template>
+                <template #title>大学德语四级助手</template>
+                <template #append>
+                  <v-btn icon="fa:fab fa-github" href="https://github.com/XiaoSong-CPE/PHD4" target="__blank" tag="a"></v-btn>
+                </template>
+              </v-app-bar>
+              <RouterView style="margin-top: 64px;"/>
+            </NMessageProvider>
+          </NNotificationProvider>
+        </NDialogProvider>
+      </NLoadingBarProvider>
+    </NConfigProvider>
+  </v-layout>
 </template>

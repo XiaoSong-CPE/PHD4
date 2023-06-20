@@ -51,9 +51,13 @@ async function exam(frage: string, antwort: string) {
   let res: {
     orgScore: number
     finalScore: number
+    wordsCount: number
+    orgScoreComment: string
   } = {
     orgScore: 0,
-    finalScore: 0
+    finalScore: 0,
+    wordsCount: 0,
+    orgScoreComment: ''
   }
 
   // 检查prompt是否为空
@@ -88,12 +92,9 @@ async function exam(frage: string, antwort: string) {
     ]
   })
 
-  console.log('AI改卷结果：')
-  console.log(completion.data.choices[0].message)
   res.orgScore = Number(completion.data.choices[0].message?.content)
-
-  console.log('字数：')
-  console.log(wordsCount(antwort))
+  res.wordsCount = Number(wordsCount(antwort))
+  res.orgScoreComment = convertScoreToString(res.orgScore)
 
   // 根据字数修正分数
   if (res.orgScore) {
@@ -108,6 +109,22 @@ async function exam(frage: string, antwort: string) {
 
   // 返回结果
   return res
+}
+
+function convertScoreToString(score: number): string {
+  if (score >= 9 && score <= 10) {
+    return '切题，内容完整，语义连贯，文体得当，表达清楚，基本无语言错误。'
+  } else if (score >= 7 && score <= 8) {
+    return '切题，内容相对完整，文体得当，个别句子连贯不够，表达清楚，有少量语言错误。'
+  } else if (score >= 5 && score <= 6) {
+    return '基本切题，内容基本完整，文体欠得当，有些地方表达不够清楚，文字勉强连贯，有较多语言错误。'
+  } else if (score >= 3 && score <= 4) {
+    return '基本切题，内容不完整，文体欠得当，文章连贯性差，意思表达不够清楚，有较多语言错误。'
+  } else if (score >= 0 && score <= 2) {
+    return '内容偏题；文体判断错误；条理不清，意思表达不清楚，有大量语言错误。'
+  } else {
+    return '无效的分数，请输入 0 到 10 之间的数字。'
+  }
 }
 
 // 暴露函数exam

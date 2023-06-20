@@ -5,7 +5,9 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]
-    }
+    },
+    "ignoreDeprecations": "5.0", // 添加这一行以消除警告
+    "verbatimModuleSyntax": true // 添加这一行以解决问题
   },
 
   "references": [
